@@ -1,0 +1,11 @@
+.cardimage{
+width: 180px;
+}
+.tab_desc{
+}
+textarea{
+  resize: none;
+}
+.ng-valid.ng-dirty{
+  border-color:blue;
+}

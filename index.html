@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html ng-app="store">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="style.css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="bower_components/c3/c3.min.css" media="screen" title="no title" charset="utf-8">
+    <title>angulearn</title>
+  </head>
+  <body>
+  <script src="bower_components/angular/angular.min.js" charset="utf-8"></script>
+  <script src="bower_components/angular-resource/angular-resource.min.js" charset="utf-8"></script>
+  <script src="bower_components/d3/d3.min.js" charset="utf-8"></script>
+  <script src="bower_components/c3/c3.js" charset="utf-8"></script>
+  <script src="app.js" charset="utf-8"></script>
+  <div class="row" ng-controller="StoreController as store">
+    <div class="container">
+      <h1>HearthStone Data</h1>
+      <div class="chart" ng-controller="StatController as stats">
+      </div>
+      <div class="list-group">
+        <div class="list-group-item col-lg-4" ng-repeat="card in store.cards">
+          <h2 class="list-group-item-heading">{{card[0].name}}</h2>
+          <div class="text-center">
+            <img ng-src="{{card[0].imgGold}}" class="cardimage" alt="card">
+          </div>
+          <section ng-controller="TabController as tab">
+            <ul class="nav nav-pills">
+              <li role="presentation" ng-class="{active:tab.isSet(1)}"><a href="#" ng-click="tab.setTab(1)">Description</a></li>
+              <li role="presentation" ng-class="{active:tab.isSet(2)}"><a href="#" ng-click="tab.setTab(2)">Misc</a></li>
+              <li role="presentation" ng-class="{active:tab.isSet(3)}"><a href="#" ng-click="tab.setTab(3)">Review</a></li>
+            </ul>
+            <!--description-->
+            <div class="tab_desc" ng-show="tab.isSet(1)">
+              <ul class="list-group">
+                <li class="list-group-item">Cost:<span class="badge">{{card[0].cost}}</span></li>
+                <li class="list-group-item">Attack:<span class="badge">{{card[0].attack}}</span></li>
+                <li class="list-group-item">Health:<span class="badge">{{card[0].health}}</span></li>
+              </ul>
+            </div>
+
+            <!--misc-->
+            <div class="tab_desc" ng-show="tab.isSet(2)">
+              <p>{{card[0].flavor}}</p>
+            </div>
+
+            <!--Review-->
+            <div class="tab_desc" ng-show="tab.isSet(3)"  ng-controller="ReviewController as reviewCtrl">
+              <form　name="myForm" ng-submit="reviewCtrl.addReview()">
+                <!--written review -->
+                <blockquote ng-repeat="reviewd in reviewCtrl.reviews">
+                  <strong>{{reviewd.stars}} Stars</strong>
+                  {{reviewd.body}}
+                  <cite class="clearfix">--{{reviewd.author}}</cite>
+                </blockquote>
+                <!--Live Preview-->
+                <blockquote>
+                  <strong>{{reviewCtrl.review.stars}} Stars</strong>
+                  {{reviewCtrl.review.body}}
+                  <cite class="clearfix">--{{reviewCtrl.review.author}}</cite>
+                </blockquote>
+                <h4>レビューを書きましょう</h4>
+                <fieldset class="form-group">
+                  <select ng-model="reviewCtrl.review.stars" class="form-control" ng-options="stars for stars in [5,4,3,2,1]" title="Stars" required>
+                    <option value>Rate the Card</option>
+                  </select>
+                </fieldset>
+                <fieldset class="form-group">
+                  <textarea ng-model="reviewCtrl.review.body" rows="2" cols="20" class="form-control" placeholder="コメント蘭" title="Review" required></textarea>
+                </fieldset>
+                <fieldset class="form-group">
+                  <input ng-model="reviewCtrl.review.author" class="form-control" type="email" name="name" title="Email" required>
+                </fieldset>
+                <fieldset class="form-group">
+                  <button ng-click="reviewCtrl.addReview(card[0])" class="btn btn-info">Submit Review</button>
+                </fieldset>
+              </form>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+  </body>
+</html>
